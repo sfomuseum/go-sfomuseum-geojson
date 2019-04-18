@@ -41,29 +41,38 @@ func Depicts(f geojson.Feature) ([]int64, error) {
 	switch Placetype(f) {
 
 	case "exhibition":
-		return DepictsCampus(f)
+		return DepictsWOFPlacetype(f, "building")
 	case "publicart":
-		return DepictsCampus(f)
+		return DepictsWOFPlacetype(f, "campus")
 	default:
 		return nil, errors.New("Unsupported placetype")
 	}
 }
 
-func DepictsCampus(f geojson.Feature) ([]int64, error) {
+func DepictsWOFPlacetype(f geojson.Feature, str_pt string) ([]int64, error) {
 
-	pt, err := placetypes.GetPlacetypeByName("campus")
+	pt, err := placetypes.GetPlacetypeByName(str_pt)
 
 	if err != nil {
 		return nil, err
 	}
-
+	
 	valid := make(map[string]bool)
 	depicts := make(map[int64]bool)
 
-	children := placetypes.Children(pt)
+	wof_id := whosonfirst.Id(f)	
+	depicts[wof_id] = true
+	
+	roles := []string{
+		"common",
+		"common_optional",
+		"optional",
+	}
 
-	for _, p := range children {
-		valid[p.Name] = bool
+	descendants := placetypes.DescendantsForRoles(pt, roles)
+
+	for _, p := range descendants {
+		valid[p.Name] = true
 	}
 
 	hierarchies := whosonfirst.Hierarchies(f)
@@ -94,5 +103,5 @@ func DepictsCampus(f geojson.Feature) ([]int64, error) {
 		ids = append(ids, id)
 	}
 
-	return ids
+	return ids, nil
 }

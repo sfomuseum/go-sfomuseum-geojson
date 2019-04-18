@@ -8,6 +8,7 @@ self:   prep rmdeps
 	if test -d src; then rm -rf src; fi
 	mkdir -p src/github.com/sfomuseum/go-sfomuseum-geojson
 	cp *.go src/github.com/sfomuseum/go-sfomuseum-geojson/
+	cp -r feature src/github.com/sfomuseum/go-sfomuseum-geojson/
 	cp -r properties src/github.com/sfomuseum/go-sfomuseum-geojson/
 	cp -r vendor/* src/
 
@@ -30,9 +31,10 @@ vendor-deps: rmdeps deps
 
 fmt:
 	go fmt *.go
+	go fmt feature/*.go
 	go fmt properties/*.go
 	go fmt properties/*/*.go
 
 bin: 	self
 	rm -rf bin/*
-	# @GOPATH=$(GOPATH) go build -o bin/sfom-render-ids cmd/sfom-render-ids.go
+	@GOPATH=$(GOPATH) go build -o bin/depicts cmd/depicts.go
