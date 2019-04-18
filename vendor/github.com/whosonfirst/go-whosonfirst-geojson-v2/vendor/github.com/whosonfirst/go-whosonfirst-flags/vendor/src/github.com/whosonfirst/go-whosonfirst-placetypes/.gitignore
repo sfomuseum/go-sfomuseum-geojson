@@ -2,5 +2,3 @@
 pkg
 src
 *.bak
-bin
-!bin/.gitignore
