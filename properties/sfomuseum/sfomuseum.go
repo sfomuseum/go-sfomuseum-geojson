@@ -56,13 +56,13 @@ func DepictsWOFPlacetype(f geojson.Feature, str_pt string) ([]int64, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	valid := make(map[string]bool)
 	depicts := make(map[int64]bool)
 
-	wof_id := whosonfirst.Id(f)	
+	wof_id := whosonfirst.Id(f)
 	depicts[wof_id] = true
-	
+
 	roles := []string{
 		"common",
 		"common_optional",
